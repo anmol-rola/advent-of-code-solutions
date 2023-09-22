@@ -20,54 +20,16 @@ class File:
     self.name = name
     self.size = size
 
-class Stack:
-  def __init__(self):
-    self.arr = []
-    self.length = 0
-  
-  def push(self, x):
-    self.arr.append(x)
-    self.length += 1
-  
-  def pop(self):
-    self.arr.pop()
-    self.length -= 1
-  
-  def top(self):
-    return self.arr[self.length-1]
-
-  def empty(self):
-    return self.length == 0
-
-class Queue:
-  def __init__(self):
-    self.arr = []
-    self.length = 0
-  
-  def push(self, x):
-    self.arr.append(x)
-    self.length += 1
-  
-  def pop(self):
-    self.arr = self.arr[1:]
-    self.length -= 1
-  
-  def front(self):
-    return self.arr[0]
-
-  def empty(self):
-    return self.length == 0
-
 location = Directory('/')
 root = location
-stack = Stack()
-stack.push(location)
+stack = []
+stack.append(location)
 result = 0
 
 i = 1
 commands = input.split('\n')
 while i < len(commands):
-  location = stack.top()
+  location = stack[-1]
   curr = commands[i].split(' ')
   if curr[0] == '$':
     command = curr[1]
@@ -75,7 +37,7 @@ while i < len(commands):
       arg = curr[2]
       if arg != '..':
         location = [directory for directory in location.sub_directories if directory.name == arg][0]
-        stack.push(location)
+        stack.append(location)
       else:
         curr_subdir_sizes = sum([dir.size for dir in location.sub_directories])
         curr_file_sizes = sum([file.size for file in location.files])
@@ -93,8 +55,8 @@ while i < len(commands):
   i += 1
 
 
-while not stack.empty():
-  location = stack.top()
+while stack:
+  location = stack[-1]
   curr_subdir_sizes = sum([dir.size for dir in location.sub_directories])
   curr_file_sizes = sum([file.size for file in location.files])
   location.size += curr_file_sizes + curr_subdir_sizes
@@ -109,16 +71,16 @@ required_space = 30000000
 available_space = total_space - root.size
 more_required = required_space - available_space
 
-stack = Stack()
-stack.push(root)
+stack = []
+stack.append(root)
 minsize = root.size
 
-while not stack.empty():
-  location = stack.top()
+while stack:
+  location = stack[-1]
   if location.size >= more_required and location.size < minsize:
     minsize = location.size
   stack.pop()
   for sub_dir in location.sub_directories:
-    stack.push(sub_dir)
+    stack.append(sub_dir)
 
 print("PART_2", minsize)
