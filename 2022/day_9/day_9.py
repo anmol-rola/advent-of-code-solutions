@@ -56,13 +56,6 @@ for curr_move in input.split('\n'):
 
 print("PART-1", get_unique_positions(tail_visits))
 
-head = {"x": 0, "y": 0}
-tail = {"x": 0, "y": 0}
-tail_visits = [[0,0]]
-for curr_move in input.split('\n'):
-    curr_move = curr_move.split(' ')
-    move(curr_move[0], int(curr_move[1]), head, tail)
-
 for i in range(1, 9):
     curr_head_visits = tail_visits
     tail_visits = [[0,0]]
